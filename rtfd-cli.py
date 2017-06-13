@@ -23,11 +23,19 @@ def pname_grabber(string):
             #print(project_links)
             project_name =  project_titles.lower()
             project_name = project_name.replace(' ','-')
-            #print(project_name)
+            print(project_name)
+            download_links(project_name)
             pname_list.append(project_name)
     return pname_list
 
+# grabs links to the available doc files using api v1
+def download_links(project_name):
+    url = 'http://readthedocs.org/api/v1/project/'+str(project_name)+'?format=json'
+    json_obj = requests.get(url).text
+    data = json.loads(json_obj)
+    for k, v in data['downloads'].items():
+        print(k, "-->", v)
+
+pname_grabber("django")
 
 
-list = pname_grabber("django")
-print(list)
