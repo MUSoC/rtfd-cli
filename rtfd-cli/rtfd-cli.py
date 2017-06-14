@@ -1,41 +1,52 @@
+from bs4 import BeautifulSoup
+#from colorama import init, Fore, Style
 import requests
 import json
-from bs4 import BeautifulSoup
+import argparse
 
+# parse positional and optional arguments
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Download docs right from the Command-Line')
+
+    parser.add_argument(
+        'query',
+        metavar='QUERY',
+        type=str,
+        nargs='*',
+        help='name of the project')
+#    parser.add_argument(
+#        '-n',
+#        '--no-color',
+#        help='do not colorize or style text',
+#        action='store_true')
+
+    return parser
 
 # parse the query into a searchable query
-
 def generate_search_query(query):
     query = query.replace(' ', '+')
     return query
 
-def pname_grabber(string):
-    pname_list = []
-    query = generate_search_query(string)
-    url = 'https://readthedocs.org/search/?q=' + str(query) + '&version=latest&type=project&language=en'
-    source_code = requests.get(url).text
-    soup = BeautifulSoup(source_code,'html.parser')
-    for p in soup.find_all('p',{'class':'module-item-title'}):
-        for a in p.find_all('a'):
-            project_titles = a.string
-            project_links = 'https://readthedocs.org' + str(a.get('href'))
-            #print(project_titles)
-            #print(project_links)
-            project_name =  project_titles.lower()
-            project_name = project_name.replace(' ','-')
-            print(project_name)
-            download_links(project_name)
-            pname_list.append(project_name)
-    return pname_list
 
-# grabs links to the available doc files using api v1
-def download_links(project_name):
-    url = 'http://readthedocs.org/api/v1/project/'+str(project_name)+'?format=json'
-    json_obj = requests.get(url).text
-    data = json.loads(json_obj)
-    for k, v in data['downloads'].items():
-        print(k, "-->", v)
-
-pname_grabber("django")
+# the main function
+def rtfd(query):
+    query = generate_search_query(query)
 
 
+
+
+def command_line():
+    parser = parse_args()
+
+    init(autoreset=True)
+
+    query = args.query   
+
+    rtfd(query)
+
+
+
+if __name__ == '__main__':
+
+    command_line()
