@@ -92,6 +92,7 @@ def links_scraper(selected_project):
         
     return download_links
 
+#Collects inputs from the user and returns selected file's link
 def get_file_input(download_links):
     while True:
         selection = int(input('> '))
@@ -101,13 +102,9 @@ def get_file_input(download_links):
             print("Choose a valid number!!")    
     return download_links[selection -1]
 
-def decode_file(selected_file):
-    selected_file = selected_file[2:]
-    return selected_file
-    
+#prints url of the selected file format  
 def download_file(selected_file):
-    url = decode_file(selected_file)
-    url = 'https://' + str(url)
+    url = 'https:' + str(selected_file)
     print(url)
 
 # the main function
