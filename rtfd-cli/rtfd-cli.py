@@ -42,7 +42,6 @@ def command_line():
     init(autoreset=True)
 
     query = args.query   
-
     rtfd(query)
 
 
