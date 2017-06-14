@@ -52,6 +52,7 @@ def show_project_titles(result,numb):
 def ten_titles(all_titles):
     names = []
     numb = 1
+    print('\n')
     for result in all_titles[:10]:
         name = decode_title(result)
         show_project_titles(result ,numb)
@@ -69,13 +70,45 @@ def get_project_input(names):
             print("Choose a valid number!!")    
     return names[selection -1]
 
+#prints list of available file formats to download
+def show_available_formats(file_types,numb):
+    print(str(numb)+'.'+str(file_types))
+
 #returns links of available docs
 def links_scraper(selected_project):
+    file_types = []
+    download_links = []
+    numb = 1
     url = 'http://readthedocs.org/api/v1/project/'+str(selected_project)+'?format=json'
     json_obj = requests.get(url).text
     data = json.loads(json_obj)
     for k, v in data['downloads'].items():
-        print(k, "-->", v)
+        file_types.append(k)
+        download_links.append(v)
+
+    for result in file_types:
+        show_available_formats(result,numb)
+        numb += 1       
+        
+    return download_links
+
+def get_file_input(download_links):
+    while True:
+        selection = int(input('> '))
+        if selection <= len(download_links) and selection >= 1:
+            break
+        else:
+            print("Choose a valid number!!")    
+    return download_links[selection -1]
+
+def decode_file(selected_file):
+    selected_file = selected_file[2:]
+    return selected_file
+    
+def download_file(selected_file):
+    url = decode_file(selected_file)
+    url = 'https://' + str(url)
+    print(url)
 
 # the main function
 def rtfd(query):
@@ -87,7 +120,11 @@ def rtfd(query):
     selected_project = get_project_input(req_projects_names)
 
     print("\nAvailable Formats:\n")
-    available_links = links_scraper(selected_project) 
+    download_links = links_scraper(selected_project)
+    print("\nChoose format you wish to download:")
+    selected_file = get_file_input(download_links)
+    download_file(selected_file)
+    
 
 def command_line():
     parser = parse_args()
