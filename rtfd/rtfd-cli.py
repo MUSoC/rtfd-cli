@@ -8,7 +8,6 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Download docs right from the Command-Line')
-
     parser.add_argument(
         'query',
         metavar='QUERY',
@@ -20,7 +19,6 @@ def parse_args():
 #        '--no-color',
 #        help='do not colorize or style text',
 #        action='store_true')
-
     return parser
 
 # parse the query into a searchable query
@@ -48,8 +46,7 @@ def decode_title(result):
 
 #prints first 10 project titles
 def show_project_titles(result,numb):
-    print(str(numb)+'.'+str(result))
-    
+    print(str(numb)+'.'+str(result))    
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -69,8 +66,7 @@ def get_project_input(names):
         if selection <= len(names) and selection >= 1:
             break
         else:
-            print("Choose a valid number!!")
-    
+            print("Choose a valid number!!")    
     return names[selection -1]
 
 #returns links of available docs
@@ -89,21 +85,15 @@ def rtfd(query):
     
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
+
     print("\nAvailable Formats:\n")
-    available_links = links_scraper(selected_project)
-    
-
-
-
+    available_links = links_scraper(selected_project) 
 
 def command_line():
     parser = parse_args()
     args = parser.parse_args()
-
     query = args.query   
     rtfd(query)
-
-
 
 if __name__ == '__main__':
 
