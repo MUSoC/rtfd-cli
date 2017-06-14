@@ -25,7 +25,7 @@ def parse_args():
 
 # parse the query into a searchable query
 def generate_search_query(query):
-    query = query.replace(' ', '+')
+    query = (' '.join(query)).replace(' ', '+')
     return query
 
 
