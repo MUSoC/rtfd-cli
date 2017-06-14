@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import rtfd-cli
+import rtfd
 
 setup(name='rtfd-cli',
       version='0.1',
