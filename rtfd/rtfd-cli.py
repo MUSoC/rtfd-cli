@@ -69,7 +69,7 @@ def get_project_input(names):
         else:
             print("Choose a valid number!!")    
     return names[selection -1]
-
+  
 #prints list of available file formats to download
 def show_available_formats(file_types,numb):
     print(str(numb)+'.'+str(file_types))
@@ -79,17 +79,18 @@ def links_scraper(selected_project):
     file_types = []
     download_links = []
     numb = 1
+    
+#returns links of available docs
+def links_scraper(selected_project):
     url = 'http://readthedocs.org/api/v1/project/'+str(selected_project)+'?format=json'
     json_obj = requests.get(url).text
     data = json.loads(json_obj)
     for k, v in data['downloads'].items():
         file_types.append(k)
         download_links.append(v)
-
     for result in file_types:
         show_available_formats(result,numb)
-        numb += 1       
-        
+        numb += 1     
     return download_links
 
 #Collects inputs from the user and returns selected file's link
@@ -111,18 +112,15 @@ def download_file(selected_file):
 def rtfd(query):
     query = generate_search_query(query)
     all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles)
-    
+    req_projects_names =  ten_titles(all_titles)   
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
-
     print("\nAvailable Formats:\n")
     download_links = links_scraper(selected_project)
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
-    download_file(selected_file)
+    download_file(selected_file)   
     
-
 def command_line():
     parser = parse_args()
     args = parser.parse_args()
@@ -130,5 +128,4 @@ def command_line():
     rtfd(query)
 
 if __name__ == '__main__':
-
     command_line()
