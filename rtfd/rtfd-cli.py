@@ -89,7 +89,6 @@ def links_scraper(selected_project):
     for result in file_types:
         show_available_formats(result,numb)
         numb += 1       
-        
     return download_links
 
 #Collects inputs from the user and returns selected file's link
@@ -126,8 +125,7 @@ def rtfd(query):
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
     print("\nDownloading the selected format, please wait......\n")
-    download_file(selected_file)
-    
+    download_file(selected_file)    
 
 def command_line():
     parser = parse_args()
@@ -136,5 +134,4 @@ def command_line():
     rtfd(query)
 
 if __name__ == '__main__':
-
     command_line()
