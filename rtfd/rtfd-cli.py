@@ -102,10 +102,15 @@ def get_file_input(download_links):
             print("Choose a valid number!!")    
     return download_links[selection -1]
 
-#prints url of the selected file format  
+#downloads the required file 
 def download_file(selected_file):
-    url = 'https:' + str(selected_file)
-    print(url)
+    json_url = 'https:' + str(selected_file)
+    r = requests.get(json_url, allow_redirects=True)  # to get content after redirection
+    file_url = r.url                    # 'https://media.readthedocs.org/pdf/django/latest/django.pdf'
+    file_name = file_url.split('/')[-1]
+    with open(file_name, 'wb') as f:
+        f.write(r.content)
+    print(str(file_name) + " has been downloaded!!")
 
 # the main function
 def rtfd(query):
@@ -120,6 +125,7 @@ def rtfd(query):
     download_links = links_scraper(selected_project)
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
+    print("\nDownloading the selected format, please wait......\n")
     download_file(selected_file)
     
 
