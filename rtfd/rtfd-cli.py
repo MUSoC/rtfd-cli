@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import argparse
+from tqdm import tqdm
 
 # parse positional and optional arguments
 def parse_args():
@@ -111,7 +112,7 @@ def download_file(selected_file):
     with open(file_name, 'wb') as f:
         for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
             f.write(data)        
-    print(str(file_name) + " has been downloaded!!")
+    print("\n"+str(file_name) + " has been downloaded!!")
 
 # the main function
 def rtfd(query):
