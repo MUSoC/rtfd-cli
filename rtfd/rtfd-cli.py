@@ -130,6 +130,9 @@ def rtfd(query):
 def command_line():
     parser = parse_args()
     args = parser.parse_args()
+    if not args.query:
+        parser.print_help()
+        exit()
     query = args.query   
     rtfd(query)
 
