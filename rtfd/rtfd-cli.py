@@ -128,7 +128,7 @@ def download_file(selected_file,dir):
                 f.write(data)
         print("\n"+str(file_name) + " has been downloaded!!")
     else: 
-        with open(dir+file_name, 'wb') as f:
+        with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
         print("\n"+str(file_name) + " has been downloaded!!")                
