@@ -104,11 +104,13 @@ def get_file_input(download_links):
 #downloads the required file 
 def download_file(selected_file):
     json_url = 'https:' + str(selected_file)
-    r = requests.get(json_url, allow_redirects=True)  # to get content after redirection
+    r = requests.get(json_url, allow_redirects=True, stream=True)  # to get content after redirection     
+    total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
     file_url = r.url                    # 'https://media.readthedocs.org/pdf/django/latest/django.pdf'
     file_name = file_url.split('/')[-1]
     with open(file_name, 'wb') as f:
-        f.write(r.content)
+        for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+            f.write(data)        
     print(str(file_name) + " has been downloaded!!")
 
 # the main function
