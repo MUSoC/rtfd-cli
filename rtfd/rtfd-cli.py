@@ -85,8 +85,7 @@ def links_scraper(selected_project):
     data = json.loads(json_obj)
     for k, v in data['downloads'].items():
         file_types.append(k)
-        download_links.append(v)
-
+        download_links.append(v)            
     for result in file_types:
         show_available_formats(result,numb)
         numb += 1       
@@ -118,11 +117,9 @@ def download_file(selected_file):
 def rtfd(query):
     query = generate_search_query(query)
     all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles)
-    
+    req_projects_names =  ten_titles(all_titles)    
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
-
     print("\nAvailable Formats:\n")
     download_links = links_scraper(selected_project)
     print("\nChoose format you wish to download:")
