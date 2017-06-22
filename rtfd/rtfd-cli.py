@@ -108,6 +108,7 @@ def get_file_input(download_links):
             print("Choose a valid number!!")    
     return download_links[selection -1]
 
+# makes dir input workable
 def generate_dir_query(dir):
     dir = ' '.join(dir)
     return dir
@@ -117,21 +118,24 @@ def download_file(selected_file,dir):
     json_url = 'https:' + str(selected_file)
     r = requests.get(json_url, allow_redirects=True, stream=True)  # to get content after redirection     
     total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
-    file_url = r.url                    # 'https://media.readthedocs.org/pdf/django/latest/django.pdf'
+    file_url = r.url                            #redirected url
     file_name = file_url.split('/')[-1]
 
     if dir:                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
         print("Directory =" + dir)
-        with open(dir+file_name, 'wb') as f:
-            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                f.write(data)
-        print("\n"+str(file_name) + " has been downloaded!!")
+        try:
+            with open(dir+file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                    f.write(data)
+            print("\n"+str(file_name) + " has been downloaded!!")
+        except FileNotFoundError:
+            print("Invalid Directory("+dir+") !! Use a correct directory !!")
     else: 
         with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
-        print("\n"+str(file_name) + " has been downloaded!!")                
+        print("\n"+str(file_name) + " has been downloaded!!")           
     
 
 # the main function
