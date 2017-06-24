@@ -19,7 +19,7 @@ def parse_args():
         '-o',
         '--output-directory',
         type=str,
-        nargs='*',
+        nargs=1,
         help='custom output directory'
         )
 #    parser.add_argument(
