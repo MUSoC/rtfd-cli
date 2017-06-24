@@ -9,7 +9,7 @@ setup(name='rtfd-cli',
       packages = find_packages(),
       entry_points={
             'console_scripts': [
-                  'rtfd-cli = rtfd-cli.rtfd-cli:command_line',
+                  'rtfd-cli = rtfd.rtfd:command_line',
             ]
       },
       url='https://github.com/MUSoC/rtfd-cli',
@@ -19,7 +19,6 @@ setup(name='rtfd-cli',
       install_requires=[
             'requests',
             'BeautifulSoup4',
-            'colorama',
-            'json'
+            'tqdm'
       ]
      )
