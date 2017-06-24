@@ -128,14 +128,14 @@ def download_file(selected_file,dir):
             with open(dir+file_name, 'wb') as f:
                 for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                     f.write(data)
-            print("\n"+str(file_name) + " has been downloaded!!")
+            print("\n"+str(file_name) + " has been downloaded.")
         except FileNotFoundError:
-            print("Invalid Directory("+dir+") !! Use a correct directory !!")
+            print("Directory "+dir+" doesn't exist.")
     else: 
         with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
-        print("\n"+str(file_name) + " has been downloaded!!")                
+        print("\n"+str(file_name) + " has been downloaded.")                
     
 
 # the main function
