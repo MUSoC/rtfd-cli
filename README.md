@@ -1,6 +1,6 @@
 # RTFD-CLI
 
-CLI to download docs from ReadTheDocs.ord
+CLI to download docs from ReadTheDocs.org
 
 <img src='http://i.imgur.com/Idyf3kC.png'>
 
