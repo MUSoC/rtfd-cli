@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import argparse
+from tqdm import tqdm
 
 # parse positional and optional arguments
 def parse_args():
@@ -14,6 +15,13 @@ def parse_args():
         type=str,
         nargs='*',
         help='name of the project')
+    parser.add_argument(
+        '-o',
+        '--output-directory',
+        type=str,
+        nargs='*',
+        help='custom output directory'
+        )
 #    parser.add_argument(
 #        '-n',
 #        '--no-color',
@@ -84,8 +92,7 @@ def links_scraper(selected_project):
     data = json.loads(json_obj)
     for k, v in data['downloads'].items():
         file_types.append(k)
-        download_links.append(v)
-
+        download_links.append(v)            
     for result in file_types:
         show_available_formats(result,numb)
         numb += 1       
@@ -101,37 +108,59 @@ def get_file_input(download_links):
             print("Choose a valid number!!")    
     return download_links[selection -1]
 
+# makes dir input workable
+def generate_dir_query(dir):
+    dir = ' '.join(dir)
+    return dir
+
 #downloads the required file 
-def download_file(selected_file):
+def download_file(selected_file,dir):
     json_url = 'https:' + str(selected_file)
-    r = requests.get(json_url, allow_redirects=True)  # to get content after redirection
-    file_url = r.url                    # 'https://media.readthedocs.org/pdf/django/latest/django.pdf'
+    r = requests.get(json_url, allow_redirects=True, stream=True)  # to get content after redirection     
+    total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
+    file_url = r.url                            #redirected url
     file_name = file_url.split('/')[-1]
-    with open(file_name, 'wb') as f:
-        f.write(r.content)
-    print(str(file_name) + " has been downloaded!!")
+
+    if dir:                                 #if custom dir is mentioned
+        dir = generate_dir_query(dir)
+        print("Directory =" + dir)
+        try:
+            with open(dir+file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                    f.write(data)
+            print("\n"+str(file_name) + " has been downloaded!!")
+        except FileNotFoundError:
+            print("Invalid Directory("+dir+") !! Use a correct directory !!")
+    else: 
+        with open(file_name, 'wb') as f:
+            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                f.write(data)
+        print("\n"+str(file_name) + " has been downloaded!!")                
+    
 
 # the main function
-def rtfd(query):
+def rtfd(query,dir):
     query = generate_search_query(query)
     all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles)
-    
+    req_projects_names =  ten_titles(all_titles)    
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
-
     print("\nAvailable Formats:\n")
     download_links = links_scraper(selected_project)
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
     print("\nDownloading the selected format, please wait......\n")
-    download_file(selected_file)    
+    download_file(selected_file, dir)    
 
 def command_line():
     parser = parse_args()
     args = parser.parse_args()
-    query = args.query   
-    rtfd(query)
+    if not args.query:
+        parser.print_help()
+        exit()
+    query = args.query
+    dir = args.output_directory
+    rtfd(query,dir)
 
 if __name__ == '__main__':
     command_line()
