@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import argparse
+import os
 from tqdm import tqdm
 
 # parse positional and optional arguments
@@ -36,7 +37,7 @@ def generate_search_query(query):
 
 # returns all titles from the search page
 def title_scraper(query):
-    project_titles = []
+    project_titles = []                                    #list of all project titles from search results
     url = 'https://readthedocs.org/search/?q='+str(query)+'&version=latest&type=project&language=en'
     source_code = requests.get(url).text
     soup = BeautifulSoup(source_code, 'html.parser')
@@ -58,7 +59,7 @@ def show_project_titles(result,numb):
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
-    names = []
+    names = []                          #project name list
     numb = 1
     print('\n')
     for result in all_titles[:10]:
@@ -124,18 +125,18 @@ def download_file(selected_file,dir):
     if dir:                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
         print("Directory =" + dir)
-        try:
-            with open(dir+file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                    f.write(data)
-            print("\n"+str(file_name) + " has been downloaded.")
-        except FileNotFoundError:
-            print("Directory "+dir+" doesn't exist.")
+        if not os.path.exists(dir):         #Create directory is not exists
+            os.makedirs(dir)
+            print("Created directory "+dir)
+        with open(dir+file_name, 'wb') as f:
+            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+                f.write(data)                   
+        print("\n"+str(file_name) + " has been downloaded.")
     else: 
         with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
-        print("\n"+str(file_name) + " has been downloaded.")                
+        print("\n"+str(file_name) + " has been downloaded.")             
     
 
 # the main function
@@ -158,8 +159,8 @@ def command_line():
     if not args.query:
         parser.print_help()
         exit()
-    query = args.query
-    dir = args.output_directory
+    query = args.query                      #user query
+    dir = args.output_directory             #custom user dir
     rtfd(query,dir)
 
 if __name__ == '__main__':
