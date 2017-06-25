@@ -124,18 +124,18 @@ def download_file(selected_file,dir):
     if dir:                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
         print("Directory =" + dir)
-        try:
-            with open(dir+file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                    f.write(data)
-            print("\n"+str(file_name) + " has been downloaded.")
-        except FileNotFoundError:
-            print("Directory "+dir+" doesn't exist.")
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+            print("Created directory "+dir)
+        with open(dir+file_name, 'wb') as f:
+            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+                f.write(data)                   
+        print("\n"+str(file_name) + " has been downloaded.")
     else: 
         with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
-        print("\n"+str(file_name) + " has been downloaded.")                
+        print("\n"+str(file_name) + " has been downloaded.")             
     
 
 # the main function
