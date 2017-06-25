@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import argparse
+import os
 from tqdm import tqdm
 
 # parse positional and optional arguments
