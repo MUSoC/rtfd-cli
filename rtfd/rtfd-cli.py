@@ -54,21 +54,21 @@ def decode_title(result):
     return result
 
 #prints first 10 project titles
-def show_project_titles(result,numb,colored=False): 
+def show_project_titles(result,numb): 
     if colored:        
         print(Fore.CYAN + Style.BRIGHT + str(numb)+'.'+str(result) + Style.RESET_ALL)
     else:
         print(str(numb)+'.'+str(result))
 
 #returns list of 10 project_names
-def ten_titles(all_titles, colored):
+def ten_titles(all_titles):
     names = []                          #project name list
     numb = 1
     print('\n')
     for result in all_titles[:10]:
         name = decode_title(result)
         if colored:
-            show_project_titles(result ,numb, colored)
+            show_project_titles(result ,numb)
         else:
             show_project_titles(result ,numb)
         numb += 1
@@ -86,14 +86,14 @@ def get_project_input(names):
     return names[selection -1]
 
 #prints list of available file formats to download
-def show_available_formats(file_types,numb, colored=False):
+def show_available_formats(file_types,numb):
     if colored:
         print(Fore.CYAN + Style.BRIGHT + str(numb)+'.'+str(file_types) + Style.RESET_ALL)
     else:
         print(str(numb)+'.'+str(file_types))
 
 #returns links of available docs
-def links_scraper(selected_project, colored):
+def links_scraper(selected_project):
     file_types = []
     download_links = []
     numb = 1
@@ -104,7 +104,7 @@ def links_scraper(selected_project, colored):
         file_types.append(k)
         download_links.append(v)            
     for result in file_types:
-        show_available_formats(result,numb,colored)
+        show_available_formats(result,numb)
         numb += 1       
     return download_links
 
@@ -124,7 +124,7 @@ def generate_dir_query(dir):
     return dir
 
 #downloads the required file 
-def download_file(selected_file,dir, colored=False):
+def download_file(selected_file,dir):
     json_url = 'https:' + str(selected_file)
     r = requests.get(json_url, allow_redirects=True, stream=True)  # to get content after redirection     
     total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
@@ -167,30 +167,30 @@ def download_file(selected_file,dir, colored=False):
    
 
 # the main function
-def rtfd(query,dir,colored):
+def rtfd(query,dir):
     query = generate_search_query(query)
     all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles, colored)    
+    req_projects_names =  ten_titles(all_titles)    
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
     print("\nAvailable Formats:\n")
-    download_links = links_scraper(selected_project, colored)
+    download_links = links_scraper(selected_project)
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
     print("\nDownloading the selected format, please wait......\n")
-    download_file(selected_file, dir ,colored)    
+    download_file(selected_file, dir)    
 
 def command_line():
-    parser = parse_args()
-    args = parser.parse_args()
     init()
     if not args.query:
         parser.print_help()
         exit()
     query = args.query                      #user query
     dir = args.output_directory             #custom user dir
-    colored = args.color                    #colorize the text
-    rtfd(query,dir,colored)
+    rtfd(query,dir)
 
 if __name__ == '__main__':
+    parser = parse_args()
+    args = parser.parse_args()
+    colored = args.color                    #colorize the text
     command_line()
