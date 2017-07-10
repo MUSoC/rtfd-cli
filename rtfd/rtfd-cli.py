@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-#from colorama import init, Fore, Style
+from colorama import init, Fore, Style
 import requests
 import json
 import argparse
@@ -23,11 +23,11 @@ def parse_args():
         nargs=1,
         help='custom output directory'
         )
-#    parser.add_argument(
-#        '-n',
-#        '--no-color',
-#        help='do not colorize or style text',
-#        action='store_true')
+    parser.add_argument(
+        '-c',
+        '--color',
+        help='colorize or style text',
+        action='store_true')
     return parser
 
 # parse the query into a searchable query
@@ -54,8 +54,12 @@ def decode_title(result):
     return result
 
 #prints first 10 project titles
-def show_project_titles(result,numb):
-    print(str(numb)+'.'+str(result))    
+def show_project_titles(result,numb): 
+    if colored:
+        c_string = str(numb)+'.'+str(result)
+        colorize(c_string, CYAN)       
+    else:
+        print(str(numb)+'.'+str(result))
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -64,7 +68,10 @@ def ten_titles(all_titles):
     print('\n')
     for result in all_titles[:10]:
         name = decode_title(result)
-        show_project_titles(result ,numb)
+        if colored:
+            show_project_titles(result ,numb)
+        else:
+            show_project_titles(result ,numb)
         numb += 1
         names.append(name)
     return names
@@ -81,7 +88,11 @@ def get_project_input(names):
 
 #prints list of available file formats to download
 def show_available_formats(file_types,numb):
-    print(str(numb)+'.'+str(file_types))
+    if colored:
+        c_string = str(numb)+'.'+str(file_types)
+        colorize(c_string, CYAN)
+    else:
+        print(str(numb)+'.'+str(file_types))
 
 #returns links of available docs
 def links_scraper(selected_project):
@@ -121,23 +132,46 @@ def download_file(selected_file,dir):
     total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
     file_url = r.url                            #redirected url
     file_name = file_url.split('/')[-1]
-
-    if dir:                                 #if custom dir is mentioned
-        dir = generate_dir_query(dir)
-        print("Directory =" + dir)
-        if not os.path.exists(dir):         #Create directory is not exists
-            os.makedirs(dir)
-            print("Created directory "+dir)
-        with open(dir+file_name, 'wb') as f:
-            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
-                f.write(data)                   
-        print("\n"+str(file_name) + " has been downloaded.")
-    else: 
-        with open(file_name, 'wb') as f:
-            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                f.write(data)
-        print("\n"+str(file_name) + " has been downloaded.")             
-    
+    if colored:
+        if dir:                                 #if custom dir is mentioned
+            dir = generate_dir_query(dir)
+            c_string = "Directory =" + dir
+            colorize(c_string, MAGENTA)
+            if not os.path.exists(dir):         #Create directory is not exists
+                os.makedirs(dir)
+                c_string = "Created directory "+dir
+                colorize(c_string, MAGENTA)
+            print(GREEN)
+            with open(dir+file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+                    f.write(data)
+            print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
+        else:
+            print(GREEN)
+            with open(file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                    f.write(data)
+            print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
+    else:
+        if dir:                                 #if custom dir is mentioned
+            dir = generate_dir_query(dir)
+            print("Directory =" + dir)
+            if not os.path.exists(dir):         #Create directory is not exists
+                os.makedirs(dir)
+                print("Created directory "+dir)
+            with open(dir+file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+                    f.write(data)                   
+            print(str(file_name) + " has been downloaded.")
+        else: 
+            with open(file_name, 'wb') as f:
+                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                    f.write(data)
+            print(str(file_name) + " has been downloaded.")                  
+   
+#Colorize the output statement
+def colorize(string , color):    
+    print(color + string + Style.RESET_ALL) 
 
 # the main function
 def rtfd(query,dir):
@@ -154,8 +188,7 @@ def rtfd(query,dir):
     download_file(selected_file, dir)    
 
 def command_line():
-    parser = parse_args()
-    args = parser.parse_args()
+    init()
     if not args.query:
         parser.print_help()
         exit()
@@ -164,4 +197,12 @@ def command_line():
     rtfd(query,dir)
 
 if __name__ == '__main__':
+    parser = parse_args()
+    args = parser.parse_args()
+    colored = args.color                    #colorize the text
+    CYAN = Fore.CYAN + Style.BRIGHT         #list of colors to choose from
+    GREEN = Fore.GREEN + Style.BRIGHT
+    BLUE = Fore.BLUE + Style.BRIGHT
+    MAGENTA = Fore.MAGENTA + Style.BRIGHT
+    RED = Fore.RED + Style.BRIGHT
     command_line()
