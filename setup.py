@@ -19,6 +19,7 @@ setup(name='rtfd-cli',
       install_requires=[
             'requests',
             'BeautifulSoup4',
-            'tqdm'
+            'tqdm',
+            'colorama'
       ]
      )

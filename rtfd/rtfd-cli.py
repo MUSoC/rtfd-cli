@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
-#from colorama import init, Fore, Style
+from colorama import init, Fore, Style
 import requests
 import json
 import argparse
 import os
 from tqdm import tqdm
+from helpers import formatstr
 
 # parse positional and optional arguments
 def parse_args():
@@ -23,11 +24,11 @@ def parse_args():
         nargs=1,
         help='custom output directory'
         )
-#    parser.add_argument(
-#        '-n',
-#        '--no-color',
-#        help='do not colorize or style text',
-#        action='store_true')
+    parser.add_argument(
+        '-c',
+        '--color',
+        help='colorize or style text',
+        action='store_true')
     return parser
 
 # parse the query into a searchable query
@@ -54,8 +55,9 @@ def decode_title(result):
     return result
 
 #prints first 10 project titles
-def show_project_titles(result,numb):
-    print(str(numb)+'.'+str(result))    
+def show_project_titles(result,numb): 
+    string = str(numb)+'.'+str(result)
+    formatstr(string, CYAN, colored)     
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -81,7 +83,8 @@ def get_project_input(names):
 
 #prints list of available file formats to download
 def show_available_formats(file_types,numb):
-    print(str(numb)+'.'+str(file_types))
+    string = str(numb)+'.'+str(file_types)
+    formatstr(string, CYAN, colored)
 
 #returns links of available docs
 def links_scraper(selected_project):
@@ -121,24 +124,26 @@ def download_file(selected_file,dir):
     total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
     file_url = r.url                            #redirected url
     file_name = file_url.split('/')[-1]
-
     if dir:                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
-        print("Directory =" + dir)
+        string = "Directory =" + dir
+        formatstr(string, MAGENTA, colored)
         if not os.path.exists(dir):         #Create directory is not exists
             os.makedirs(dir)
-            print("Created directory "+dir)
+            string = "Created directory "+dir
+            formatstr(string, MAGENTA, colored)
+        print(GREEN)
         with open(dir+file_name, 'wb') as f:
-            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
-                f.write(data)                   
-        print("\n"+str(file_name) + " has been downloaded.")
-    else: 
+          for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+            f.write(data)
+        print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
+    else:
+        print(GREEN)
         with open(file_name, 'wb') as f:
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
-        print("\n"+str(file_name) + " has been downloaded.")             
-    
-
+        print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
+   
 # the main function
 def rtfd(query,dir):
     query = generate_search_query(query)
@@ -154,8 +159,7 @@ def rtfd(query,dir):
     download_file(selected_file, dir)    
 
 def command_line():
-    parser = parse_args()
-    args = parser.parse_args()
+    init()
     if not args.query:
         parser.print_help()
         exit()
@@ -164,4 +168,12 @@ def command_line():
     rtfd(query,dir)
 
 if __name__ == '__main__':
+    parser = parse_args()
+    args = parser.parse_args()
+    colored = args.color                    #colorize the text
+    CYAN = Fore.CYAN + Style.BRIGHT         #list of colors to choose from
+    GREEN = Fore.GREEN + Style.BRIGHT
+    BLUE = Fore.BLUE + Style.BRIGHT
+    MAGENTA = Fore.MAGENTA + Style.BRIGHT
+    RED = Fore.RED + Style.BRIGHT
     command_line()
