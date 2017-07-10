@@ -5,6 +5,7 @@ import json
 import argparse
 import os
 from tqdm import tqdm
+from helpers import formatstr
 
 # parse positional and optional arguments
 def parse_args():
@@ -56,7 +57,7 @@ def decode_title(result):
 #prints first 10 project titles
 def show_project_titles(result,numb): 
     string = str(numb)+'.'+str(result)
-    formatstr(string, CYAN)     
+    formatstr(string, CYAN, colored)     
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -83,7 +84,7 @@ def get_project_input(names):
 #prints list of available file formats to download
 def show_available_formats(file_types,numb):
     string = str(numb)+'.'+str(file_types)
-    formatstr(string, CYAN)
+    formatstr(string, CYAN, colored)
 
 #returns links of available docs
 def links_scraper(selected_project):
@@ -126,11 +127,11 @@ def download_file(selected_file,dir):
     if dir:                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
         string = "Directory =" + dir
-        formatstr(string, MAGENTA)
+        formatstr(string, MAGENTA, colored)
         if not os.path.exists(dir):         #Create directory is not exists
             os.makedirs(dir)
             string = "Created directory "+dir
-            formatstr(string, MAGENTA)
+            formatstr(string, MAGENTA, colored)
         print(GREEN)
         with open(dir+file_name, 'wb') as f:
           for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
@@ -142,13 +143,6 @@ def download_file(selected_file,dir):
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
         print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
-
-#Colorize the output statement if colored is true
-def formatstr(string , color):
-    if colored:    
-        print(color + string + Style.RESET_ALL)
-    else:
-        print(string) 
    
 # the main function
 def rtfd(query,dir):
