@@ -55,11 +55,8 @@ def decode_title(result):
 
 #prints first 10 project titles
 def show_project_titles(result,numb): 
-    if colored:
-        c_string = str(numb)+'.'+str(result)
-        colorize(c_string, CYAN)       
-    else:
-        print(str(numb)+'.'+str(result))
+    string = str(numb)+'.'+str(result)
+    formatstr(string, CYAN)     
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -68,10 +65,7 @@ def ten_titles(all_titles):
     print('\n')
     for result in all_titles[:10]:
         name = decode_title(result)
-        if colored:
-            show_project_titles(result ,numb)
-        else:
-            show_project_titles(result ,numb)
+        show_project_titles(result ,numb)
         numb += 1
         names.append(name)
     return names
@@ -88,11 +82,8 @@ def get_project_input(names):
 
 #prints list of available file formats to download
 def show_available_formats(file_types,numb):
-    if colored:
-        c_string = str(numb)+'.'+str(file_types)
-        colorize(c_string, CYAN)
-    else:
-        print(str(numb)+'.'+str(file_types))
+    string = str(numb)+'.'+str(file_types)
+    formatstr(string, CYAN)
 
 #returns links of available docs
 def links_scraper(selected_project):
@@ -132,47 +123,33 @@ def download_file(selected_file,dir):
     total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
     file_url = r.url                            #redirected url
     file_name = file_url.split('/')[-1]
-    if colored:
-        if dir:                                 #if custom dir is mentioned
-            dir = generate_dir_query(dir)
-            c_string = "Directory =" + dir
-            colorize(c_string, MAGENTA)
-            if not os.path.exists(dir):         #Create directory is not exists
-                os.makedirs(dir)
-                c_string = "Created directory "+dir
-                colorize(c_string, MAGENTA)
-            print(GREEN)
-            with open(dir+file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
-                    f.write(data)
-            print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
-        else:
-            print(GREEN)
-            with open(file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                    f.write(data)
-            print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
+    if dir:                                 #if custom dir is mentioned
+        dir = generate_dir_query(dir)
+        string = "Directory =" + dir
+        formatstr(string, MAGENTA)
+        if not os.path.exists(dir):         #Create directory is not exists
+            os.makedirs(dir)
+            string = "Created directory "+dir
+            formatstr(string, MAGENTA)
+        print(GREEN)
+        with open(dir+file_name, 'wb') as f:
+          for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+            f.write(data)
+        print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
     else:
-        if dir:                                 #if custom dir is mentioned
-            dir = generate_dir_query(dir)
-            print("Directory =" + dir)
-            if not os.path.exists(dir):         #Create directory is not exists
-                os.makedirs(dir)
-                print("Created directory "+dir)
-            with open(dir+file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
-                    f.write(data)                   
-            print(str(file_name) + " has been downloaded.")
-        else: 
-            with open(file_name, 'wb') as f:
-                for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
-                    f.write(data)
-            print(str(file_name) + " has been downloaded.")                  
-   
-#Colorize the output statement
-def colorize(string , color):    
-    print(color + string + Style.RESET_ALL) 
+        print(GREEN)
+        with open(file_name, 'wb') as f:
+            for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
+                f.write(data)
+        print("\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
 
+#Colorize the output statement if colored is true
+def formatstr(string , color):
+    if colored:    
+        print(color + string + Style.RESET_ALL)
+    else:
+        print(string) 
+   
 # the main function
 def rtfd(query,dir):
     query = generate_search_query(query)
