@@ -15,7 +15,7 @@ or
 Run it using `rtfd-cli`
 
 ```
-usage: rtfd-cli.py [-h] [-o OUTPUT_DIRECTORY] [QUERY [QUERY ...]]
+usage: rtfd.py [-h] [-o OUTPUT_DIRECTORY] [-c] [QUERY [QUERY ...]]
 
 Download docs right from the Command-Line
 
@@ -26,4 +26,5 @@ optional arguments:
   -h, --help            show this help message and exit
   -o OUTPUT_DIRECTORY, --output-directory OUTPUT_DIRECTORY
                         custom output directory
+  -c, --color           colorize or style text
 ```
