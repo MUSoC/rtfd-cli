@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from colorama import init, Fore, Style
+from tqdm import tqdm
+from helpers import formatstr
 import requests
 import json
 import argparse
 import os
-from tqdm import tqdm
-from helpers import formatstr
 
 # parse positional and optional arguments
 def parse_args():
@@ -38,7 +38,7 @@ def generate_search_query(query):
 
 # returns all titles from the search page
 def title_scraper(query):
-    project_titles = []                                    #list of all project titles from search results
+    project_titles = []                                                         #list of all project titles from search results
     url = 'https://readthedocs.org/search/?q='+str(query)+'&version=latest&type=project&language=en'
     source_code = requests.get(url).text
     soup = BeautifulSoup(source_code, 'html.parser')
@@ -120,15 +120,15 @@ def generate_dir_query(dir):
 #downloads the required file 
 def download_file(selected_file,dir):
     json_url = 'https:' + str(selected_file)
-    r = requests.get(json_url, allow_redirects=True, stream=True)  # to get content after redirection     
-    total_size = int(r.headers.get('content-length', 0));   # Total size in bytes.    
-    file_url = r.url                            #redirected url
+    r = requests.get(json_url, allow_redirects=True, stream=True)           # to get content after redirection     
+    total_size = int(r.headers.get('content-length', 0));                   # Total size in bytes.    
+    file_url = r.url                                                        #redirected url
     file_name = file_url.split('/')[-1]
-    if dir:                                 #if custom dir is mentioned
+    if dir:                                                                 #if custom dir is mentioned
         dir = generate_dir_query(dir)
         string = "Directory =" + dir
         formatstr(string, MAGENTA, colored)
-        if not os.path.exists(dir):         #Create directory is not exists
+        if not os.path.exists(dir):                                         #Create directory is not exists
             os.makedirs(dir)
             string = "Created directory "+dir
             formatstr(string, MAGENTA, colored)
@@ -171,8 +171,8 @@ def command_line():
     colored = args.color                    #colorize the text
     rtfd(query,dir)
 
-
-CYAN = Fore.CYAN + Style.BRIGHT         #list of colors to choose from
+#GLOBAL VARIABLES
+CYAN = Fore.CYAN + Style.BRIGHT             #list of colors to choose from
 GREEN = Fore.GREEN + Style.BRIGHT
 BLUE = Fore.BLUE + Style.BRIGHT
 MAGENTA = Fore.MAGENTA + Style.BRIGHT
