@@ -160,20 +160,23 @@ def rtfd(query,dir):
 
 def command_line():
     init()
+    parser = parse_args()
+    args = parser.parse_args()
     if not args.query:
         parser.print_help()
         exit()
     query = args.query                      #user query
     dir = args.output_directory             #custom user dir
+    global colored
+    colored = args.color                    #colorize the text
     rtfd(query,dir)
 
+
+CYAN = Fore.CYAN + Style.BRIGHT         #list of colors to choose from
+GREEN = Fore.GREEN + Style.BRIGHT
+BLUE = Fore.BLUE + Style.BRIGHT
+MAGENTA = Fore.MAGENTA + Style.BRIGHT
+RED = Fore.RED + Style.BRIGHT
+
 if __name__ == '__main__':
-    parser = parse_args()
-    args = parser.parse_args()
-    colored = args.color                    #colorize the text
-    CYAN = Fore.CYAN + Style.BRIGHT         #list of colors to choose from
-    GREEN = Fore.GREEN + Style.BRIGHT
-    BLUE = Fore.BLUE + Style.BRIGHT
-    MAGENTA = Fore.MAGENTA + Style.BRIGHT
-    RED = Fore.RED + Style.BRIGHT
     command_line()
