@@ -52,6 +52,7 @@ def title_scraper(query):
 def decode_title(result):
     result = result.lower()
     result = result.replace(" ","-")
+    result = result.replace("_","-")
     return result
 
 #prints first 10 project titles
