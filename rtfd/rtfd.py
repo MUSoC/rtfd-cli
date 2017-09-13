@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from colorama import init, Fore, Style
 from tqdm import tqdm
-from helpers import formatstr
+from .helpers import formatstr
 import requests
 import json
 import argparse
