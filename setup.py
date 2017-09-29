@@ -15,7 +15,7 @@ setup(name='rtfd-cli',
       url='https://github.com/MUSoC/rtfd-cli',
       keywords=['readthedocs', 'terminal', 'command-line', 'rtfd', 'python'],
       license='MIT',
-      downlaod_url='https://github.com/nvzard/rtfd-cli/archive/0.1.tar.gz',
+      downlaod_url='https://github.com/nvzard/rtfd-cli/archive/0.1.1.tar.gz',
       classifiers=[],
       install_requires=[
             'requests',
