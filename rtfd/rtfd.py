@@ -39,14 +39,17 @@ def generate_search_query(query):
 # returns all titles from the search page
 def title_scraper(query):
     project_titles = []                                                         #list of all project titles from search results
+    project_descs = []
     url = 'https://readthedocs.org/search/?q='+str(query)+'&version=latest&type=project&language=en'
     source_code = requests.get(url).text
     soup = BeautifulSoup(source_code, 'html.parser')
-    for p in soup.find_all('p', {'class': 'module-item-title'}):
-        for a in p.find_all('a'):
-            title = a.string
-            project_titles.append(title)
-    return project_titles
+    for p in soup.find_all('li', {'class': 'module-item'}):
+        title_p, desc_p, *_ =  p.find_all('p')
+        title = title_p.find('a').string
+        desc = desc_p.get_text().strip()
+        project_titles.append(title)
+        project_descs.append(desc)
+    return project_titles, project_descs
 
 #converts titles into project names
 def decode_title(result):
@@ -56,18 +59,19 @@ def decode_title(result):
     return result
 
 #prints first 10 project titles
-def show_project_titles(result,numb):
+def show_project_titles(result,numb,desc):
     string = str(numb)+'.'+str(result)
     formatstr(string, CYAN, colored)
+    formatstr(desc, BLUE, colored)
 
 #returns list of 10 project_names
-def ten_titles(all_titles):
+def ten_titles(all_titles, all_descs):
     names = []                          #project name list
     numb = 1
     print('\n')
-    for result in all_titles[:10]:
+    for result, desc in zip(all_titles[:10], all_descs[:10]):
         name = decode_title(result)
-        show_project_titles(result ,numb)
+        show_project_titles(result ,numb, desc)
         numb += 1
         names.append(name)
     return names
@@ -148,8 +152,8 @@ def download_file(selected_file,dir):
 # the main function
 def rtfd(query,dir):
     query = generate_search_query(query)
-    all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles)
+    all_titles, all_descs = title_scraper(query)
+    req_projects_names =  ten_titles(all_titles, all_descs)
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
     print("\nAvailable Formats:\n")
