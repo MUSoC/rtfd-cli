@@ -56,9 +56,9 @@ def decode_title(result):
     return result
 
 #prints first 10 project titles
-def show_project_titles(result,numb): 
+def show_project_titles(result,numb):
     string = str(numb)+'.'+str(result)
-    formatstr(string, CYAN, colored)     
+    formatstr(string, CYAN, colored)
 
 #returns list of 10 project_names
 def ten_titles(all_titles):
@@ -79,7 +79,7 @@ def get_project_input(names):
         if selection <= len(names) and selection >= 1:
             break
         else:
-            print("Choose a valid number!!")    
+            print("Choose a valid number!!")
     return names[selection -1]
 
 #prints list of available file formats to download
@@ -97,10 +97,10 @@ def links_scraper(selected_project):
     data = json.loads(json_obj)
     for k, v in data['downloads'].items():
         file_types.append(k)
-        download_links.append(v)            
+        download_links.append(v)
     for result in file_types:
         show_available_formats(result,numb)
-        numb += 1       
+        numb += 1
     return download_links
 
 #Collects inputs from the user and returns selected file's link
@@ -110,7 +110,7 @@ def get_file_input(download_links):
         if selection <= len(download_links) and selection >= 1:
             break
         else:
-            print("Choose a valid number!!")    
+            print("Choose a valid number!!")
     return download_links[selection -1]
 
 # makes dir input workable
@@ -118,11 +118,11 @@ def generate_dir_query(dir):
     dir = ' '.join(dir)
     return dir
 
-#downloads the required file 
+#downloads the required file
 def download_file(selected_file,dir):
     json_url = 'https:' + str(selected_file)
-    r = requests.get(json_url, allow_redirects=True, stream=True)           # to get content after redirection     
-    total_size = int(r.headers.get('content-length', 0));                   # Total size in bytes.    
+    r = requests.get(json_url, allow_redirects=True, stream=True)           # to get content after redirection
+    total_size = int(r.headers.get('content-length', 0));                   # Total size in bytes.
     file_url = r.url                                                        #redirected url
     file_name = file_url.split('/')[-1]
     if dir:                                                                 #if custom dir is mentioned
@@ -135,7 +135,7 @@ def download_file(selected_file,dir):
             formatstr(string, MAGENTA, colored)
         print(GREEN)
         with open(dir+file_name, 'wb') as f:
-          for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):    
+          for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
             f.write(data)
         print(u"\u2713 " + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
     else:
@@ -144,12 +144,12 @@ def download_file(selected_file,dir):
             for data in tqdm(r.iter_content(), total=total_size, unit='B', unit_scale=True):
                 f.write(data)
         print(u"\u2713" + str(file_name) + " has been downloaded.\n" + Style.RESET_ALL)
-   
+
 # the main function
 def rtfd(query,dir):
     query = generate_search_query(query)
     all_titles = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles)    
+    req_projects_names =  ten_titles(all_titles)
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
     print("\nAvailable Formats:\n")
@@ -157,7 +157,7 @@ def rtfd(query,dir):
     print("\nChoose format you wish to download:")
     selected_file = get_file_input(download_links)
     print("\nDownloading the selected format, please wait......\n")
-    download_file(selected_file, dir)    
+    download_file(selected_file, dir)
 
 def command_line():
     init()
