@@ -46,7 +46,8 @@ def title_scraper(query):
     for p in soup.find_all('li', {'class': 'module-item'}):
         title_p, desc_p, *_ =  p.find_all('p')
         title = title_p.find('a').string
-        desc = desc_p.get_text().strip()
+        desc = desc_p.get_text()
+        desc = decode_description(desc)
         project_titles.append(title)
         project_descs.append(desc)
     return project_titles, project_descs
@@ -54,8 +55,13 @@ def title_scraper(query):
 #converts titles into project names
 def decode_title(result):
     result = result.lower()
-    result = result.replace(" ","-")
-    result = result.replace("_","-")
+    result = result.replace(" ","-").replace("_","-")
+    return result
+
+#house keeping for description
+def decode_description(result):
+    result = result.strip()
+    result = result.replace('=','').replace('\r','').replace('\n','')
     return result
 
 #prints first 10 project titles
