@@ -1,8 +1,8 @@
 # RTFD-CLI
 
-CLI to download docs from ReadTheDocs.org
+CLI to download documentations from ReadTheDocs.org
 
-<img src='http://i.imgur.com/tAJCxnd.gif'>
+<img src='http://i.imgur.com/SWSXnbV.gif'>
 
 ## Installation & Usage:
 
@@ -28,3 +28,12 @@ optional arguments:
                         custom output directory
   -c, --color           colorize or style text
 ```
+
+## Contributing:
+
+Any PR's in bug fixes, features and documentation are most welcome!
+
+## License:
+
+``The MIT License``
+
