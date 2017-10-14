@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
       name='rtfd-cli',
-      version='0.2',
+      version='0.2.1',
       description='CLI to download docs from ReadTheDocs.org',
       author='Nitanshu Vashistha',
       author_email='nitanshu.vzard@gmail.com',
