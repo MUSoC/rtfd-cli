@@ -44,10 +44,20 @@ def title_scraper(query):
     source_code = requests.get(url).text
     soup = BeautifulSoup(source_code, 'html.parser')
     for p in soup.find_all('li', {'class': 'module-item'}):
-        title_p, desc_p, *_ =  p.find_all('p')
+        ps = p.find_all('p')
+
+        try:
+            title_p, desc_p, *_ = ps
+        except ValueError:
+            # some results have no description
+            title_p = ps[0]
+            desc = ''
+        else:
+            desc = desc_p.get_text()
+
         title = title_p.find('a').string
-        desc = desc_p.get_text()
         desc = decode_description(desc)
+
         project_titles.append(title)
         project_descs.append(desc)
     return project_titles, project_descs
