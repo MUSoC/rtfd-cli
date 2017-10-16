@@ -51,13 +51,12 @@ def title_scraper(query):
         except ValueError:
             # some results have no description
             title_p = ps[0]
-            desc = ''
+            desc = 'Description not available.'
         else:
             desc = desc_p.get_text()
+            desc = decode_description(desc)
 
         title = title_p.find('a').string
-        desc = decode_description(desc)
-
         project_titles.append(title)
         project_descs.append(desc)
     return project_titles, project_descs
@@ -71,14 +70,15 @@ def decode_title(result):
 #house keeping for description
 def decode_description(result):
     result = result.strip()
-    result = result.replace('=','').replace('\r','').replace('\n','')
+    result = result.replace('=','').replace('\r','').replace('\n','').replace('...','')
     return result
 
 #prints first 10 project titles
 def show_project_titles(result,numb,desc):
-    string = str(numb)+'.'+str(result)
+    string = str(numb)+'> '+str(result)
     formatstr(string, CYAN, colored)
     formatstr(desc, BLUE, colored)
+    print()
 
 #returns list of 10 project_names
 def ten_titles(all_titles, all_descs):
