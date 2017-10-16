@@ -2,7 +2,7 @@
 
 CLI to download documentations from ReadTheDocs.org
 
-<img src='http://i.imgur.com/SWSXnbV.gif'>
+<img src='https://i.imgur.com/UNV5443.gif'>
 
 ## Installation & Usage:
 
