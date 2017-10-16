@@ -75,21 +75,21 @@ def decode_description(result):
     result = result.replace('=','').replace('\r','').replace('\n','').replace('...','')
     return result
 
-#prints first 10 project titles
-def show_project_titles(result,numb,desc):
+#prints first 10 project names with description
+def display_projects(result,numb,desc):
     string = str(numb)+'> '+str(result)
     formatstr(string, CYAN, colored)
     formatstr(desc, BLUE, colored)
     print()
 
-#returns list of 10 project_names
-def ten_titles(all_titles, all_descs):
+#returns list of 10 project names with description
+def ten_projects(all_titles, all_descs):
     names = []                          #project name list
     numb = 1
     print('\n')
     for result, desc in zip(all_titles[:10], all_descs[:10]):
         name = decode_title(result)
-        show_project_titles(result ,numb, desc)
+        display_projects(result ,numb, desc)
         numb += 1
         names.append(name)
     return names
@@ -171,7 +171,7 @@ def download_file(selected_file,dir):
 def rtfd(query,dir):
     query = generate_search_query(query)
     all_titles, all_descs = title_scraper(query)
-    req_projects_names =  ten_titles(all_titles, all_descs)
+    req_projects_names =  ten_projects(all_titles, all_descs)
     print("\nChoose required project:")
     selected_project = get_project_input(req_projects_names)
     print("\nAvailable Formats:\n")
