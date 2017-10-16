@@ -45,7 +45,9 @@ def title_scraper(query):
     soup = BeautifulSoup(source_code, 'html.parser')
     for p in soup.find_all('li', {'class': 'module-item'}):
         ps = p.find_all('p')
-
+        if not ps:
+            formatstr("No results found.", RED, colored)
+            exit()
         try:
             title_p, desc_p, *_ = ps
         except ValueError:
